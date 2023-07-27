@@ -5,6 +5,7 @@ import static com.google.common.truth.Truth.assertWithMessage;
 import static edu.illinois.cs.cs124.ay2022.mp.Helpers.MAPPER;
 import static edu.illinois.cs.cs124.ay2022.mp.Helpers.PLACES_COUNT;
 import static edu.illinois.cs.cs124.ay2022.mp.Helpers.checkCSV;
+import static edu.illinois.cs.cs124.ay2022.mp.Helpers.compareGeopoints;
 import static edu.illinois.cs.cs124.ay2022.mp.Helpers.configureLogging;
 import static edu.illinois.cs.cs124.ay2022.mp.Helpers.countMarkers;
 import static edu.illinois.cs.cs124.ay2022.mp.Helpers.pause;
@@ -177,7 +178,7 @@ public final class MP0Test {
                 pause();
                 // Grab the MapView and examine its center
                 MapView mapView = activity.findViewById(R.id.map);
-                // assertThat(compareGeopoints(mapView.getMapCenter(), DEFAULT_CENTER)).isTrue();
+                //assertThat(compareGeopoints(mapView.getMapCenter(), DEFAULT_CENTER)).isTrue();
               });
     }
 
