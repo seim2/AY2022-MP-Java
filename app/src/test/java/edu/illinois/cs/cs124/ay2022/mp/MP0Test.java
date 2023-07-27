@@ -21,7 +21,6 @@ import edu.illinois.cs.cs124.ay2022.mp.network.Server;
 import edu.illinois.cs.cs125.gradlegrader.annotations.Graded;
 import java.io.IOException;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import okhttp3.OkHttpClient;
@@ -75,6 +74,8 @@ import org.robolectric.annotation.LooperMode;
 @RunWith(Enclosed.class)
 public final class MP0Test {
   // Where we expect the map to be centered
+  private static final GeoPoint DEFAULT_CENTER =
+      new GeoPoint(40.10986682167534, -88.22831928981661);
 
   static {
     // Make sure the CSV has not been modified
@@ -166,25 +167,19 @@ public final class MP0Test {
     }
 
     // Graded test that the app centers the map correctly after launch
-
-      // Start the main activity, and once it starts, check that the map is centered correctly
     @Graded(points = 50, friendlyName = "Test Map Center")
     @Test(timeout = 30000L)
     public void test2_MapCenter() {
-      // Start the main activity, and once it starts, check for a random geo point on the map
+      // Start the main activity, and once it starts, check that the map is centered correctly
       startActivity()
-          .onActivity(activity -> {
-            // Let the UI catch up
-            pause();
-            // Grab the MapView and examine its center
-            MapView mapView = activity.findViewById(R.id.map);
-
-            // Generate a random GeoPoint within the map bounds
-            Random random = new Random();
-            GeoPoint randomGeoPoint = Helpers.randomGeoPointInMap(random, mapView);
-            // Do something with the randomGeoPoint, for example, assert its validity
-            // ...
-          });
+          .onActivity(
+              activity -> {
+                // Let the UI catch up
+                pause();
+                // Grab the MapView and examine its center
+                MapView mapView = activity.findViewById(R.id.map);
+                assertThat(compareGeopoints(mapView.getMapCenter(), DEFAULT_CENTER)).isTrue();
+              });
     }
 
     // THIS TEST SHOULD WORK
