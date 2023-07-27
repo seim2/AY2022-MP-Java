@@ -126,7 +126,7 @@ public final class MainActivity extends AppCompatActivity
       // Save the list of all available places
       allPlaces = result.getResult();
       // Update the UI to show all available places
-      updateShownPlaces(allPlaces);
+       updateShownPlaces(allPlaces);
     } catch (Exception e) {
       e.printStackTrace();
       Log.e(TAG, "getPlaces threw an exception: " + result.getException());
