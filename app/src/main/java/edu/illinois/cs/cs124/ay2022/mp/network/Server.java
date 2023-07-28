@@ -1,4 +1,5 @@
 package edu.illinois.cs.cs124.ay2022.mp.network;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -67,6 +68,35 @@ public final class Server extends Dispatcher {
         .setHeader("Content-Type", "application/json; charset=utf-8");
   }
 
+  private MockResponse postFavoritePlace(final  RecordedRequest request) throws JsonProcessingException{
+    ObjectMapper objectMapper = new ObjectMapper();
+    String requestBody = request.getBody().readUtf8();
+    try {
+      // JSON 문자열을 Place 객체로 파싱
+      Place placej = objectMapper.readValue(requestBody, Place.class) ;
+
+      // 원하는 데이터 추출
+      String id = placej.getId();
+      String name = placej.getName();
+      Double latitude = placej.getLatitude();
+      Double longitude = placej.getLongitude();
+      String description = placej.getDescription();
+
+      // 추출된 데이터 출력
+      System.out.println("ID: " + id);
+      System.out.println("Name: " + name);
+      System.out.println("Latitude: " + latitude);
+      System.out.println("Longitude: " + longitude);
+      System.out.println("Description: " + description);
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    return new MockResponse()
+        .setResponseCode(HttpURLConnection.HTTP_OK)
+        .setBody(OBJECT_MAPPER.writeValueAsString(places))
+        .setHeader("Content-Type", "application/json; charset=utf-8");
+
+  }
   /*
    * Server request dispatcher.
    * Responsible for parsing the HTTP request and determining how to respond.
@@ -102,6 +132,8 @@ public final class Server extends Dispatcher {
       } else if (path.equals("/places") && method.equals("GET")) {
         // Return the JSON list of restaurants for a GET request to the path /restaurants
         return getPlaces();
+      } else if (path.equals("/favoriteplace") && method.equals("POST")){
+        return postFavoritePlace(request);
       }
 
       // If the route didn't match above, then we return a 404 NOT FOUND
@@ -137,7 +169,7 @@ public final class Server extends Dispatcher {
     for (String[] parts : csvReader) {
       toReturn.add(
           new Place(
-              parts[0], parts[1], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), ""));
+              parts[0], parts[1], Double.parseDouble(parts[2]), Double.parseDouble(parts[3]), parts[4]));
     }
     return toReturn;
   }
